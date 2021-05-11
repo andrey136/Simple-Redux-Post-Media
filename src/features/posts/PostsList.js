@@ -7,7 +7,8 @@ import { selectAllPosts } from './postsSlice';
 
 
 export const PostsList = () => {
-    const posts = useSelector(selectAllPosts);
+    const posts = useSelector(selectAllPosts).posts;
+    console.log(posts, 'PostsList.js')
     const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date))
 
     
