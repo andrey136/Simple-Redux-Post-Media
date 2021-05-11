@@ -1,7 +1,8 @@
 import {createSlice, nanoid} from '@reduxjs/toolkit';
 import { sub } from 'date-fns';
 
-const initialState = [ 
+const initialState = {
+    posts: [ 
         { 
             id: '1', 
             title: 'First Post!', 
@@ -29,7 +30,10 @@ const initialState = [
                 eyes: 0
             },
         } 
-]
+    ],
+    status: "idle",
+    error: null
+}
 
 const postsSlice = createSlice({
     "name" : "posts",
@@ -38,21 +42,21 @@ const postsSlice = createSlice({
         reactionAdded: (state, action) => {
             console.log('ACTION', action)
             const { postId, reaction } = action.payload
-            const existingPost = state.find( post => post.id == postId )
+            const existingPost = state.posts.find( post => post.id == postId )
             if (existingPost) {
                 existingPost.reactions[reaction]++
             }
         },
         reactionRemoved: (state, action) => {
             const { postId, reaction } = action.payload
-            const existingPost = state.find( post => post.id == postId )
+            const existingPost = state.posts.find( post => post.id == postId )
             if (existingPost){
                 existingPost.reactions[reaction]--
             }
         },
         postAdded: {
             reducer(state, action){
-                state.push(action.payload);
+                state.posts.push(action.payload);
             },
             prepare(title, content, userId){
                 return {
@@ -69,7 +73,7 @@ const postsSlice = createSlice({
         },
         postUpdated: (state, action) => {
             const { id, title, content } = action.payload
-            const existingPost = state.find(post => post.id == id)
+            const existingPost = state.posts.find(post => post.id == id)
             if(existingPost){
                 existingPost.title = title;
                 existingPost.content = content
@@ -79,7 +83,10 @@ const postsSlice = createSlice({
 });
 
 export const selectAllPosts = state => state.posts;
-export const selectPostById = (state, id) => state.posts.find(post => post.id === id);
+export const selectPostById = (state, id) => {
+    console.log(state.posts.posts)
+    return state.posts.posts.find(post => post.id === id);
+}
 
 export const { postAdded, postUpdated, reactionAdded } = postsSlice.actions
 
