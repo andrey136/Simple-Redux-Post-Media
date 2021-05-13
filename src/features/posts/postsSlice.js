@@ -1,4 +1,4 @@
-import {createSlice, nanoid} from '@reduxjs/toolkit';
+import {createSlice, nanoid, createAsyncThunk} from '@reduxjs/toolkit';
 import { sub } from 'date-fns';
 
 const initialState = {
@@ -35,12 +35,16 @@ const initialState = {
     error: null
 }
 
+export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
+    const response = await client.get('/fakeApi/posts');
+    const response.posts
+})
+
 const postsSlice = createSlice({
     "name" : "posts",
     initialState,
     reducers: {
         reactionAdded: (state, action) => {
-            console.log('ACTION', action)
             const { postId, reaction } = action.payload
             const existingPost = state.posts.find( post => post.id == postId )
             if (existingPost) {
@@ -79,12 +83,24 @@ const postsSlice = createSlice({
                 existingPost.content = content
             }
         }
+    },
+    extraReducers: {
+        [fetchPosts.pending]: (state, action) => {
+            state.posts.status = 'loading'
+        },
+        [fetchPosts.fulfilled]: (state, action) => {
+            state.posts.status = 'succeeded'
+            state.posts.posts.concat(action.payload)
+        },
+        [fetchPosts.rejected]: (state, action) => {
+            state.props.state = 'failed',
+            state.posts.error = action.error.message
+        }
     }
 });
 
 export const selectAllPosts = state => state.posts;
 export const selectPostById = (state, id) => {
-    console.log(state.posts.posts)
     return state.posts.posts.find(post => post.id === id);
 }
 
