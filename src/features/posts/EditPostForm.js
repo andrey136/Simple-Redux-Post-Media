@@ -6,7 +6,7 @@ import { postUpdated } from './postsSlice';
 
 export const EditPostForm = ({ match }) => {
     const postId = match.params.postId;
-    const post = useSelector( state => state.posts.find(post => post.id == postId))
+    const post = useSelector( state => state.posts.posts.find(post => post.id == postId))
     if(post !== undefined){
       return EditPostFormRender(post, postId)
     }
