@@ -3,22 +3,25 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { PostAuthor } from './PostAuthor';
 import { ReactionButton } from './ReactionButtons';
-import { selectAllPosts, fetchPosts } from './postsSlice';
+import { selectAllPosts } from './postsSlice';
+// import { selectAllPosts, fetchPosts } from './postsSlice';
 
 
 export const PostsList = () => {
-    const posts = useSelector(selectAllPosts).posts;
-    console.log(posts, 'PostsList.js')
+    const posts = useSelector(selectAllPosts);
+    // console.log(posts, 'PostsList.js')
     const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date))
 
-    const postStatus = useSelector(state => state.posts.posts.status)
-    const error = useSelector(state => state.posts.posts.error)
+    const postStatus = useSelector(state => state.posts.status)
+    const error = useSelector(state => state.posts.error)
 
-    useEffect(() => {
-        if (postStatus === 'idle'){
-            dispatch(fetchPosts())
-        }
-    }, [postStatus, dispatch])
+    const dispatch = useDispatch();
+
+    // useEffect(() => {
+    //     if (postStatus === 'idle'){
+    //         dispatch(fetchPosts())
+    //     }
+    // }, [postStatus, dispatch])
 
     let content
 
